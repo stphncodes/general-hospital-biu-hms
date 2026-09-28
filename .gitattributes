@@ -1,0 +1,7 @@
+# Normalise line endings so Windows, macOS and Linux contributors produce
+# identical diffs and Prettier's `endOfLine: lf` check passes everywhere.
+* text=auto eol=lf
+*.ico binary
+*.png binary
+*.jpg binary
+*.woff2 binary

@@ -1,0 +1,1 @@
+export { ROUTES, PROTECTED_PATH_PREFIXES, AUTH_ONLY_PATHS } from "./routes";
