@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- HMS mark. Static assets cannot read CSS variables: these values mirror
+       the hms-primary (#2563eb) and hms-surface (#ffffff) tokens in globals.css.
+       Regenerate raster icons with "npm run icons" after changing this file. -->
+  <rect x="10" y="2" width="12" height="28" rx="3.5" fill="#2563eb"/>
+  <rect x="2" y="10" width="28" height="12" rx="3.5" fill="#2563eb"/>
+  <path d="M5 16h6l2.25-4.5 3.75 9 2.5-4.5H27" fill="none" stroke="#ffffff" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
