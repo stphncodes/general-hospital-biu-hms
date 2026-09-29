@@ -1,6 +1,6 @@
-import { HospitalIcon } from "lucide-react";
 import Link from "next/link";
 
+import { HMSMark } from "@/components/brand";
 import { NAV_SECTIONS } from "@/components/navigation/nav-config";
 import { NavLink } from "@/components/navigation/nav-link";
 import {
@@ -40,9 +40,7 @@ export function AppSidebar({ principal }: { principal: Principal }) {
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild tooltip={siteConfig.name}>
               <Link href={ROUTES.dashboard}>
-                <span className="flex aspect-square size-8 items-center justify-center rounded-md bg-primary text-primary-foreground">
-                  <HospitalIcon className="size-4" aria-hidden />
-                </span>
+                <HMSMark className="size-8" />
                 <span className="grid flex-1 text-left leading-tight">
                   <span className="truncate text-sm font-semibold">
                     {siteConfig.name}

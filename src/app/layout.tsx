@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 
+import { MotionProvider } from "@/components/motion";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -23,9 +24,11 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
+  // Browser chrome colour cannot read CSS variables. These mirror
+  // --hms-background and --hms-navy in globals.css; keep them in sync.
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#fbfcfd" },
-    { media: "(prefers-color-scheme: dark)", color: "#0f141b" },
+    { media: "(prefers-color-scheme: light)", color: "#f8fafc" },
+    { media: "(prefers-color-scheme: dark)", color: "#0f172a" },
   ],
 };
 
@@ -40,14 +43,16 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="min-h-svh antialiased">
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
+          defaultTheme="light"
           enableSystem
           disableTransitionOnChange
         >
-          <TooltipProvider delayDuration={300}>
-            {children}
-            <Toaster richColors closeButton />
-          </TooltipProvider>
+          <MotionProvider>
+            <TooltipProvider delayDuration={300}>
+              {children}
+              <Toaster richColors closeButton />
+            </TooltipProvider>
+          </MotionProvider>
         </ThemeProvider>
       </body>
     </html>
