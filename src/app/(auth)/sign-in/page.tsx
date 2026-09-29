@@ -1,14 +1,9 @@
 import { CircleAlertIcon } from "lucide-react";
 import type { Metadata } from "next";
+import Link from "next/link";
 
+import { AuthHeader } from "@/components/layout/auth-header";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { SignInForm } from "@/features/auth";
 import { ROUTES } from "@/lib/constants";
 import { safeRedirectPath } from "@/lib/utils";
@@ -29,24 +24,27 @@ export default async function SignInPage({ searchParams }: PageProps<"/sign-in">
   const errorMessage = typeof error === "string" ? ERROR_MESSAGES[error] : undefined;
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>
-          <h1 className="text-lg">Sign in</h1>
-        </CardTitle>
-        <CardDescription>
-          Staff accounts are created by an administrator. There is no public registration.
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        {errorMessage && (
-          <Alert variant="destructive">
-            <CircleAlertIcon aria-hidden />
-            <AlertDescription>{errorMessage}</AlertDescription>
-          </Alert>
-        )}
-        <SignInForm next={safeNext} />
-      </CardContent>
-    </Card>
+    <>
+      <AuthHeader
+        title="Sign in"
+        description="Welcome back. Use your staff account to continue."
+      />
+      {errorMessage && (
+        <Alert variant="destructive">
+          <CircleAlertIcon aria-hidden />
+          <AlertDescription>{errorMessage}</AlertDescription>
+        </Alert>
+      )}
+      <SignInForm next={safeNext} />
+      <p className="text-center text-sm text-muted-foreground">
+        Don&apos;t have an account?{" "}
+        <Link
+          href={ROUTES.register}
+          className="font-medium text-primary hover:text-primary-hover hover:underline hover:underline-offset-4"
+        >
+          Register
+        </Link>
+      </p>
+    </>
   );
 }

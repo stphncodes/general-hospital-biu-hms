@@ -4,7 +4,6 @@ import type { ReactNode } from "react";
 import { AppHeader } from "@/components/layout/app-header";
 import { AppSidebar } from "@/components/layout/app-sidebar";
 import { QueryProvider } from "@/components/providers/query-provider";
-import { DevelopmentNotice } from "@/components/shared/development-notice";
 import { SkipLink } from "@/components/shared/skip-link";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { UserMenu } from "@/features/auth";
@@ -35,11 +34,10 @@ export default async function DashboardLayout({ children }: { children: ReactNod
         <AppSidebar principal={principal ?? { userId: user.id, grants: [] }} />
         <SidebarInset>
           <AppHeader userMenu={<UserMenu email={user.email} />} />
-          <DevelopmentNotice />
           <main
             id="main-content"
             tabIndex={-1}
-            className="flex-1 p-4 outline-none md:p-6"
+            className="flex flex-1 flex-col p-4 outline-none md:p-6"
           >
             {children}
           </main>

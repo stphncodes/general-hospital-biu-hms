@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, type ComponentProps } from "react";
+import { useId, type ComponentProps, type ComponentType, type ReactNode } from "react";
 import {
   Controller,
   type Control,
@@ -10,13 +10,14 @@ import {
 
 import { Field, FieldDescription, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 
 type InputProps = Pick<
   ComponentProps<typeof Input>,
   "type" | "autoComplete" | "placeholder" | "disabled" | "inputMode" | "autoFocus"
 >;
 
-interface FormTextFieldProps<
+export interface FormTextFieldProps<
   TFieldValues extends FieldValues,
   TTransformed,
 > extends InputProps {
@@ -26,6 +27,12 @@ interface FormTextFieldProps<
   label: string;
   description?: string;
   required?: boolean;
+  /** Decorative leading icon (e.g. a Lucide icon). */
+  icon?: ComponentType<{ className?: string; "aria-hidden"?: boolean }>;
+  /** Interactive control rendered inside the input's trailing edge. */
+  endAdornment?: ReactNode;
+  /** `lg` is the roomier size used on public/auth pages. */
+  size?: "default" | "lg";
 }
 
 /**
@@ -42,6 +49,9 @@ export function FormTextField<TFieldValues extends FieldValues, TTransformed>({
   label,
   description,
   required,
+  icon: Icon,
+  endAdornment,
+  size = "default",
   ...inputProps
 }: FormTextFieldProps<TFieldValues, TTransformed>) {
   const id = useId();
@@ -68,19 +78,40 @@ export function FormTextField<TFieldValues extends FieldValues, TTransformed>({
                 </span>
               )}
             </FieldLabel>
-            <Input
-              {...inputProps}
-              id={id}
-              name={field.name}
-              ref={field.ref}
-              value={(field.value as string | undefined) ?? ""}
-              onChange={field.onChange}
-              onBlur={field.onBlur}
-              disabled={inputProps.disabled ?? field.disabled}
-              required={required}
-              aria-invalid={fieldState.invalid}
-              aria-describedby={describedBy}
-            />
+            <div className="relative">
+              {Icon && (
+                <Icon
+                  aria-hidden
+                  className={cn(
+                    "pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground",
+                    fieldState.invalid && "text-destructive",
+                  )}
+                />
+              )}
+              <Input
+                {...inputProps}
+                id={id}
+                name={field.name}
+                ref={field.ref}
+                value={(field.value as string | undefined) ?? ""}
+                onChange={field.onChange}
+                onBlur={field.onBlur}
+                disabled={inputProps.disabled ?? field.disabled}
+                required={required}
+                aria-invalid={fieldState.invalid}
+                aria-describedby={describedBy}
+                className={cn(
+                  size === "lg" && "h-10 bg-card px-3 dark:bg-input/30",
+                  Icon && "pl-9",
+                  endAdornment && "pr-10",
+                )}
+              />
+              {endAdornment && (
+                <div className="absolute inset-y-0 right-1 flex items-center">
+                  {endAdornment}
+                </div>
+              )}
+            </div>
             {description && (
               <FieldDescription id={descriptionId}>{description}</FieldDescription>
             )}

@@ -19,7 +19,12 @@ export function NavLink({ href, title, icon }: NavLinkProps) {
   const isActive = pathname === href || pathname.startsWith(`${href}/`);
 
   return (
-    <SidebarMenuButton asChild isActive={isActive} tooltip={title}>
+    <SidebarMenuButton
+      asChild
+      isActive={isActive}
+      tooltip={title}
+      className="transition-colors data-active:bg-primary-soft data-active:font-semibold data-active:text-primary-soft-foreground"
+    >
       <Link href={href} aria-current={isActive ? "page" : undefined}>
         {icon}
         <span>{title}</span>
