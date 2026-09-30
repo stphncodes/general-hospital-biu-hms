@@ -1,4 +1,4 @@
-import { LayoutDashboardIcon, type LucideIcon } from "lucide-react";
+import { LayoutDashboardIcon, ShieldCheckIcon, type LucideIcon } from "lucide-react";
 import type { Route } from "next";
 
 import type { Permission } from "@/lib/permissions";
@@ -28,9 +28,22 @@ export const NAV_SECTIONS: readonly NavSection[] = [
     label: "Overview",
     items: [{ title: "Dashboard", href: "/dashboard", icon: LayoutDashboardIcon }],
   },
+  {
+    label: "Administration",
+    items: [
+      {
+        title: "Admin console",
+        href: "/admin",
+        icon: ShieldCheckIcon,
+        permission: "admin.access",
+      },
+    ],
+  },
 ];
 
 /** Breadcrumb labels for known path segments; others are title-cased. */
 export const SEGMENT_LABELS: Readonly<Record<string, string>> = {
   dashboard: "Dashboard",
+  admin: "Administration",
+  staff: "Staff",
 };

@@ -12,19 +12,34 @@ import {
 } from "@/components/forms";
 import { Button } from "@/components/ui/button";
 import { FieldGroup } from "@/components/ui/field";
+import type { ActionResult } from "@/lib/api";
 import { ROUTES } from "@/lib/constants";
 
 import { signIn } from "../actions/sign-in";
-import { signInSchema } from "../schemas/sign-in";
+import { signInSchema, type SignInInput } from "../schemas/sign-in";
 
-export function SignInForm({ next }: { next?: string }) {
+interface SignInFormProps {
+  next?: string;
+  /**
+   * Server Action to submit to. Defaults to staff sign-in; the admin console
+   * passes its own action, which also checks for administrator access.
+   */
+  action?: (input: SignInInput) => Promise<ActionResult<never>>;
+  showForgotPassword?: boolean;
+}
+
+export function SignInForm({
+  next,
+  action = signIn,
+  showForgotPassword = true,
+}: SignInFormProps) {
   const form = useZodForm(signInSchema, {
     defaultValues: { email: "", password: "", next },
   });
 
   const onSubmit = form.handleSubmit(async (values) => {
     // On success the action redirects and this promise does not resolve with a result.
-    const result = await signIn(values);
+    const result = await action(values);
     if (!result.ok) {
       applyActionError(form, result.error);
       form.resetField("password");
@@ -58,12 +73,14 @@ export function SignInForm({ next }: { next?: string }) {
             size="lg"
             required
           />
-          <Link
-            href={ROUTES.forgotPassword}
-            className="justify-self-end text-sm font-medium text-primary hover:text-primary-hover hover:underline hover:underline-offset-4"
-          >
-            Forgot password?
-          </Link>
+          {showForgotPassword && (
+            <Link
+              href={ROUTES.forgotPassword}
+              className="justify-self-end text-sm font-medium text-primary hover:text-primary-hover hover:underline hover:underline-offset-4"
+            >
+              Forgot password?
+            </Link>
+          )}
         </div>
         <Button type="submit" disabled={isSubmitting} className="h-10 w-full">
           {isSubmitting && <Loader2Icon className="animate-spin" aria-hidden />}

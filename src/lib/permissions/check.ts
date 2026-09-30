@@ -54,6 +54,21 @@ export function hasPermissionInAnyScope(
   return principal.grants.some((grant) => grant.permission === permission);
 }
 
+/**
+ * The facility (tenant) in which the principal holds `permission` for the
+ * whole facility, or `null`. Used to resolve "which facility am I
+ * administering?" before calling `authorize` with that tenant.
+ */
+export function tenantWithPermission(
+  principal: Principal | null | undefined,
+  permission: Permission,
+): string | null {
+  const grant = principal?.grants.find(
+    (g) => g.permission === permission && g.scope.kind === "tenant",
+  );
+  return grant ? grant.scope.tenantId : null;
+}
+
 /** Throws `AuthorizationError` unless `can(...)` is true. For server code. */
 export function authorize(
   principal: Principal | null | undefined,

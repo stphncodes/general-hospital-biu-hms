@@ -49,3 +49,13 @@ test("health endpoint responds without authentication", async ({ request }) => {
   expect(response.ok()).toBe(true);
   expect(await response.json()).toEqual({ status: "ok" });
 });
+
+test("admin console sends signed-out visitors to the admin sign-in", async ({ page }) => {
+  await page.goto("/admin/staff");
+
+  await expect(page).toHaveURL(/\/admin\/login\?next=%2Fadmin%2Fstaff$/);
+  await expect(
+    page.getByRole("heading", { level: 1, name: "Administrator sign in" }),
+  ).toBeVisible();
+  await expect(page.getByLabel("Email")).toBeVisible();
+});

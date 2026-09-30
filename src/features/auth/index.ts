@@ -10,6 +10,7 @@ export { ForgotPasswordForm } from "./components/forgot-password-form";
 export { ResetPasswordForm } from "./components/reset-password-form";
 export { SignInForm } from "./components/sign-in-form";
 export { UserMenu } from "./components/user-menu";
+export { toSignInError } from "./lib/sign-in-errors";
 export {
   passwordResetRequestSchema,
   updatePasswordSchema,

@@ -42,4 +42,5 @@ Only create the folders a module actually needs.
 | Module                                   | Status                                                 |
 | ---------------------------------------- | ------------------------------------------------------ |
 | [auth](./auth)                           | Foundation: sign-in, sign-out, email-link confirmation |
+| [administration](./administration)       | Admin console: sign-in, staff list, invite staff       |
 | All other modules (see each `README.md`) | **Not implemented.** Awaiting domain modelling         |

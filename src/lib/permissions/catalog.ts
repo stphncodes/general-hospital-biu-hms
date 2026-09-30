@@ -14,6 +14,12 @@
  * privileged action remains visible, reviewable and auditable.
  */
 export const PERMISSIONS = [
+  // Administration (seeded in supabase/migrations/*_access_control.sql)
+  "admin.access",
+  "staff.read",
+  "staff.invite",
+  "roles.assign",
+  // Clinical and operational
   "patients.read",
   "patients.create",
   "patients.update",

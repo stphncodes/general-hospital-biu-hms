@@ -59,9 +59,9 @@ authorize(principal, "billing.refund", { tenantId, departmentId });
 
 ### Principles
 
-- **Deny by default.** `getPrincipal()` currently returns _no grants_ for
-  every user, because the RBAC schema does not exist yet. Nothing is
-  accessible by accident.
+- **Deny by default.** A user has only the grants of their active role
+  assignments. Deactivated staff, unknown permission keys and any failure
+  to load grants all result in _no_ grants.
 - **No superuser bypass.** There is no wildcard permission and no
   `isAdmin` flag. An administrator is a role with many explicit
   permissions — every privileged capability is visible and reviewable.
@@ -73,15 +73,36 @@ authorize(principal, "billing.refund", { tenantId, departmentId });
 - Permission keys are `<resource>.<action>` and live in
   `src/lib/permissions/catalog.ts`. The current list is **provisional**.
 
+### Implementation
+
+Schema: `supabase/migrations/20260929120000_access_control.sql` (tables
+`tenants`, `permissions`, `roles`, `role_permissions`, `staff_profiles`,
+`role_assignments`, all with RLS). Tested by
+`tests/integration/access-control.db.test.ts` (PGlite, no Docker needed).
+
+- **How grants reach the app:** a database lookup per request.
+  `getPrincipal()` calls `public.current_user_grants()` (cached per request
+  with React `cache`), so role changes apply on the next request.
+- **SQL mirror of `can()`:** `public.has_permission(permission, tenant)` is
+  used by RLS policies, so the database enforces the same model as the app.
+- **Administrator role:** `admin.access`, `staff.read`, `staff.invite`,
+  `roles.assign`. It deliberately has **no** clinical or billing permissions.
+- **Staff provisioning:** the invite action uses the secret key only for the
+  Auth admin API (sending the invitation). The profile and role are created
+  with the administrator's own session via `provision_staff()`, so RLS
+  re-checks `staff.invite` and `roles.assign`.
+- **Admin console:** `/admin` (sign-in at `/admin/login`) requires
+  `admin.access`. The admin sign-in ends the session immediately if the
+  account lacks it.
+
 ### To be designed (domain modelling)
 
-- Final permission catalogue and default role templates.
-- Separation of duties (e.g. who may grant roles; approval for refunds).
-- How grants reach the app: a database lookup per request (cached per
-  request with React `cache`), or a Supabase custom access-token hook that
-  embeds them in the JWT. Trade-off: freshness vs. performance.
-- RLS policy helpers that mirror `can()` in SQL (e.g. a `has_permission()`
-  security-definer function), so the database enforces the same model.
+- Final permission catalogue and role templates. The non-administrator
+  roles seeded by the migration are **provisional**.
+- Separation of duties: today anyone with `roles.assign` can assign any
+  role, including Administrator. Decide who may grant which roles.
+- Changing roles and deactivating accounts (no update/delete policies exist
+  yet, so these are currently impossible through the API).
 - "Break-glass" emergency access, if required: time-limited, justified,
   and prominently audited.
 

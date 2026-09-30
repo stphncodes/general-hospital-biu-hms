@@ -5,4 +5,4 @@ export type {
   Principal,
   ResourceContext,
 } from "./model";
-export { authorize, can, hasPermissionInAnyScope } from "./check";
+export { authorize, can, hasPermissionInAnyScope, tenantWithPermission } from "./check";

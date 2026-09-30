@@ -1,7 +1,19 @@
 import { NextResponse, type NextRequest } from "next/server";
 
-import { AUTH_ONLY_PATHS, PROTECTED_PATH_PREFIXES, ROUTES } from "@/lib/constants";
+import { AUTH_ONLY_PATHS, PROTECTED_AREAS, ROUTES } from "@/lib/constants";
 import { updateSession } from "@/lib/supabase/proxy";
+
+const matches = (pathname: string, prefix: string) =>
+  pathname === prefix || pathname.startsWith(`${prefix}/`);
+
+/** The protected area a path belongs to, if any (first match wins). */
+function protectedAreaFor(pathname: string) {
+  return PROTECTED_AREAS.find(
+    (area) =>
+      matches(pathname, area.prefix) &&
+      !(area.except as readonly string[]).some((path) => matches(pathname, path)),
+  );
+}
 
 /**
  * Next.js Proxy (formerly Middleware). Runs before every matched request to:
@@ -17,13 +29,11 @@ export async function proxy(request: NextRequest) {
   const { response, userId } = await updateSession(request);
   const { pathname, search } = request.nextUrl;
 
-  const isProtected = PROTECTED_PATH_PREFIXES.some(
-    (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`),
-  );
+  const area = protectedAreaFor(pathname);
 
-  if (isProtected && !userId) {
+  if (area && !userId) {
     const url = request.nextUrl.clone();
-    url.pathname = ROUTES.signIn;
+    url.pathname = area.signIn;
     url.search = "";
     url.searchParams.set("next", `${pathname}${search}`);
     return redirectPreservingCookies(url, response);

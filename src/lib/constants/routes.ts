@@ -12,10 +12,20 @@ export const ROUTES = {
   resetPassword: "/reset-password",
   dashboard: "/dashboard",
   authConfirm: "/auth/confirm",
+  admin: "/admin",
+  adminLogin: "/admin/login",
+  adminStaff: "/admin/staff",
 } as const;
 
-/** Path prefixes that require an authenticated session (enforced in `src/proxy.ts`). */
-export const PROTECTED_PATH_PREFIXES = ["/dashboard"] as const;
+/**
+ * Path prefixes that require an authenticated session (enforced in
+ * `src/proxy.ts`), and the sign-in page signed-out visitors are sent to.
+ * The first matching entry wins, so list more specific prefixes first.
+ */
+export const PROTECTED_AREAS = [
+  { prefix: ROUTES.admin, signIn: ROUTES.adminLogin, except: [ROUTES.adminLogin] },
+  { prefix: ROUTES.dashboard, signIn: ROUTES.signIn, except: [] },
+] as const;
 
 /** Auth pages that signed-in users should be redirected away from. */
 export const AUTH_ONLY_PATHS = [

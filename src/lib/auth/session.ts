@@ -4,8 +4,11 @@ import { redirect } from "next/navigation";
 import { cache } from "react";
 
 import { ROUTES } from "@/lib/constants";
+import { logger } from "@/lib/logger";
 import type { PermissionGrant, Principal } from "@/lib/permissions";
 import { createClient } from "@/lib/supabase/server";
+
+import { toGrants } from "./grants";
 
 export interface AuthenticatedUser {
   readonly id: string;
@@ -48,12 +51,19 @@ export async function requireUser(): Promise<AuthenticatedUser> {
 /**
  * Loads the permission grants for a user.
  *
- * Deny by default: until the RBAC schema (roles, permissions, role
- * assignments, scopes) is designed and migrated, no user holds any
- * permission. See docs/security/README.md#authorization.
+ * Reads `public.current_user_grants()`, which returns only the caller's own
+ * grants (deactivated staff have none). Deny by default: any failure, for
+ * example the access-control migration not being applied yet, yields no
+ * grants. See docs/security/README.md#authorization.
  */
-async function loadGrants(_userId: string): Promise<readonly PermissionGrant[]> {
-  return [];
+async function loadGrants(userId: string): Promise<readonly PermissionGrant[]> {
+  const supabase = await createClient();
+  const { data, error } = await supabase.rpc("current_user_grants");
+  if (error) {
+    logger.warn("auth.grants.load_failed", { userId, code: error.code });
+    return [];
+  }
+  return toGrants(data);
 }
 
 /** The current user as an authorization principal, or `null` if signed out. */

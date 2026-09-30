@@ -11,12 +11,14 @@ interface NavLinkProps {
   href: Route;
   title: string;
   icon: ReactNode;
+  /** Highlight only on this exact path, not its children (e.g. an overview). */
+  exact?: boolean;
 }
 
 /** Sidebar link that highlights itself for the current route and its children. */
-export function NavLink({ href, title, icon }: NavLinkProps) {
+export function NavLink({ href, title, icon, exact = false }: NavLinkProps) {
   const pathname = usePathname();
-  const isActive = pathname === href || pathname.startsWith(`${href}/`);
+  const isActive = pathname === href || (!exact && pathname.startsWith(`${href}/`));
 
   return (
     <SidebarMenuButton

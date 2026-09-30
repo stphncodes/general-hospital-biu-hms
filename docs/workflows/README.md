@@ -32,6 +32,29 @@ emails are captured by the Mailpit UI shown by `supabase status`.
 Because public sign-up is disabled, create a local test user from the local
 Studio UI (Authentication → Add user) with an obviously fake address.
 
+### Applying migrations to a hosted project
+
+```bash
+npx supabase link --project-ref <project-ref>   # once
+npx supabase db push                             # applies supabase/migrations/*
+```
+
+Also copy `supabase/templates/invite.html` and `recovery.html` into the
+dashboard (Authentication → Email Templates).
+
+### Creating the first administrator
+
+Needs `SUPABASE_SECRET_KEY` in `.env.local` and the access-control migration
+applied. On a fresh database, `--facility` creates the facility:
+
+```bash
+npm run admin:create -- --email admin@example.org --name "Full Name" --facility "Facility name"
+```
+
+A new person receives an invitation email and sets their password; an
+existing account is granted the Administrator role. They then sign in at
+`/admin/login`, where they can invite further staff.
+
 ## Quality gates
 
 | Command                | What it does                                       |

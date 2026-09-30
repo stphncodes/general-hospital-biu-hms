@@ -1,8 +1,10 @@
 # Migrations
 
-**Empty by design.** The hospital schema has not been designed yet. It will be
-produced during the domain-modelling phase and reviewed before any migration
-is written. See [docs/database/README.md](../../docs/database/README.md).
+| Migration                           | Contents                                                                                                                                |
+| ----------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| `20260929120000_access_control.sql` | Facilities, staff profiles, roles, permissions, role assignments, RLS and helper functions. See docs/security/README.md#implementation. |
+
+The clinical data model is still to be designed; see [docs/database/README.md](../../docs/database/README.md).
 
 ## Conventions (for when migrations begin)
 
