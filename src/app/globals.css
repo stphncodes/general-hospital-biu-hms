@@ -21,7 +21,7 @@
  * illustrations. Never hard-code colour values in components.
  * See docs/architecture/README.md#design-system.
  *
- * Identity: blue + white + dark navy + soft blue. Status colours (success /
+ * Identity: clinical green + white + dark navy + soft green. Status colours (success /
  * warning / info / destructive) carry meaning only, never decoration.
  */
 
@@ -126,24 +126,12 @@
  * Surfaces are solid tokens. See docs/design/README.md.
  */
 
-/*
- * Cursor-following hover highlight (interaction feedback, not decoration).
- * The owning element sets `--spot-x` / `--spot-y` (see SpotlightCard).
- */
-@utility bg-spotlight {
-  background-image: radial-gradient(
-    360px circle at var(--spot-x, 50%) var(--spot-y, 50%),
-    color-mix(in oklab, var(--primary) 7%, transparent),
-    transparent 60%
-  );
-}
-
 :root {
   /* ---- Brand palette ------------------------------------------------------ */
-  --hms-primary: #2563eb;
-  --hms-primary-hover: #1d4ed8;
-  --hms-primary-light: #3b82f6;
-  --hms-primary-soft: #e0f2fe;
+  --hms-primary: #15803d;
+  --hms-primary-hover: #166534;
+  --hms-primary-light: #22c55e;
+  --hms-primary-soft: #dcfce7;
   --hms-navy: #0f172a;
   --hms-text: #334155;
   --hms-muted: #64748b;
@@ -161,7 +149,7 @@
   --hms-navy-subtle: #152036;
   --hms-muted-on-navy: #94a3b8;
   --hms-text-on-navy: #f1f5f9;
-  --hms-primary-on-navy: #60a5fa;
+  --hms-primary-on-navy: #4ade80;
   --hms-danger-on-navy: #f87171;
 
   /* Illustration-only tones (people in HealthcareIllustration). */
@@ -204,11 +192,12 @@
 
   --border: var(--hms-border);
   --input: var(--hms-border-strong);
-  --ring: var(--hms-primary-light);
+  /* Main green: light green is below the 3:1 focus-indicator contrast on white. */
+  --ring: var(--hms-primary);
 
   --chart-1: var(--hms-primary);
   --chart-2: var(--hms-info);
-  --chart-3: var(--hms-success);
+  --chart-3: var(--hms-muted);
   --chart-4: var(--hms-warning);
   --chart-5: var(--hms-navy);
 
@@ -219,7 +208,7 @@
   --sidebar-accent: var(--accent);
   --sidebar-accent-foreground: var(--hms-navy);
   --sidebar-border: var(--hms-border);
-  --sidebar-ring: var(--hms-primary-light);
+  --sidebar-ring: var(--hms-primary);
 }
 
 /* ---- Semantic tokens: dark theme ------------------------------------------ */
@@ -232,7 +221,7 @@
   --popover: var(--hms-navy-raised);
   --popover-foreground: var(--hms-text-on-navy);
 
-  /* Light blue with navy text keeps buttons and links above 4.5:1 on navy. */
+  /* Light green with navy text keeps buttons and links above 4.5:1 on navy. */
   --primary: var(--hms-primary-light);
   --primary-foreground: var(--hms-navy);
   --primary-hover: var(--hms-primary-on-navy);
@@ -259,7 +248,7 @@
 
   --chart-1: var(--hms-primary-light);
   --chart-2: var(--hms-info);
-  --chart-3: var(--hms-success);
+  --chart-3: var(--hms-muted);
   --chart-4: var(--hms-warning);
   --chart-5: var(--hms-muted-on-navy);
 
@@ -293,6 +282,23 @@
   h2,
   h3 {
     @apply text-heading;
+  }
+  /* Browser autofill paints inputs light blue, which clashes with the palette.
+     Delaying the background change indefinitely keeps our own surface, and
+     unlike the inset box-shadow trick it leaves focus rings intact. */
+  /* Edge adds its own reveal/clear buttons; ours (FormPasswordField) is the
+     accessible one, so hide the duplicates. */
+  input::-ms-reveal,
+  input::-ms-clear {
+    display: none;
+  }
+  input:autofill,
+  input:-webkit-autofill {
+    -webkit-text-fill-color: var(--foreground);
+    caret-color: var(--foreground);
+    transition:
+      background-color 600000s 0s,
+      color 600000s 0s;
   }
   /* Visible keyboard focus for native interactive elements (shadcn components
      define their own focus-visible rings). */

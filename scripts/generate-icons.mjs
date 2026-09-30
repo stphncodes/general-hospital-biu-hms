@@ -16,7 +16,7 @@ const appDir = fileURLToPath(new URL("../src/app/", import.meta.url));
 const svg = await readFile(`${appDir}icon.svg`);
 
 // Mirrors --hms-primary / --hms-surface in globals.css.
-const PRIMARY = "#2563eb";
+const PRIMARY = "#15803d";
 const SURFACE = "#ffffff";
 
 async function png(size, source = svg) {

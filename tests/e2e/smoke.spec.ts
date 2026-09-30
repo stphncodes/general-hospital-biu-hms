@@ -1,27 +1,33 @@
 import { expect, test } from "@playwright/test";
 
-test("public start page shows the project and its independence", async ({ page }) => {
+test("the front page is the staff sign-in", async ({ page }) => {
   await page.goto("/");
 
-  await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-  await expect(
-    page.getByText("not affiliated with, endorsed by or operated"),
-  ).toBeVisible();
+  await expect(page.getByRole("heading", { level: 1, name: "Sign in" })).toBeVisible();
+  await expect(page.getByLabel("Email")).toBeVisible();
+  // The admin console is deliberately not linked from staff pages.
+  await expect(page.locator('a[href^="/admin"]')).toHaveCount(0);
 });
 
-test("public header links to sign in and registration", async ({ page }) => {
-  await page.goto("/");
-  const account = page.getByRole("navigation", { name: "Account" });
+test("old /sign-in links redirect to the front page, keeping the query", async ({
+  page,
+}) => {
+  await page.goto("/sign-in?next=%2Fdashboard");
 
-  await account.getByRole("link", { name: "Register" }).click();
+  await expect(page).toHaveURL(/\/\?next=%2Fdashboard$/);
+  await expect(page.getByRole("heading", { level: 1, name: "Sign in" })).toBeVisible();
+});
+
+test("sign-in links to registration and password reset", async ({ page }) => {
+  await page.goto("/");
+
+  await page.getByRole("link", { name: "Register" }).click();
   await expect(page).toHaveURL(/\/register$/);
   await expect(
     page.getByRole("heading", { level: 1, name: "Request staff access" }),
   ).toBeVisible();
 
   await page.goto("/");
-  await account.getByRole("link", { name: "Login" }).click();
-  await expect(page).toHaveURL(/\/sign-in$/);
   await page.getByRole("link", { name: "Forgot password?" }).click();
   await expect(
     page.getByRole("heading", { level: 1, name: "Reset your password" }),
@@ -31,16 +37,15 @@ test("public header links to sign in and registration", async ({ page }) => {
 test("password reset page requires a recovery session", async ({ page }) => {
   await page.goto("/reset-password");
 
-  await expect(page).toHaveURL(/\/sign-in\?error=link_invalid$/);
+  await expect(page).toHaveURL(/\/\?error=link_invalid$/);
   await expect(page.getByText("This link is invalid or has expired")).toBeVisible();
 });
 
 test("protected area redirects signed-out users to sign in", async ({ page }) => {
   await page.goto("/dashboard");
 
-  await expect(page).toHaveURL(/\/sign-in\?next=%2Fdashboard$/);
+  await expect(page).toHaveURL(/\/\?next=%2Fdashboard$/);
   await expect(page.getByRole("heading", { level: 1, name: "Sign in" })).toBeVisible();
-  await expect(page.getByLabel("Email")).toBeVisible();
 });
 
 test("health endpoint responds without authentication", async ({ request }) => {

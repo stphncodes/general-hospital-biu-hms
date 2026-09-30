@@ -17,7 +17,7 @@ const ERROR_MESSAGES: Readonly<Record<string, string>> = {
   link_invalid: "This link is invalid or has expired. Please request a new one.",
 };
 
-export default async function SignInPage({ searchParams }: PageProps<"/sign-in">) {
+export default async function SignInPage({ searchParams }: PageProps<"/">) {
   const { next, error } = await searchParams;
   const safeNext =
     typeof next === "string" ? safeRedirectPath(next, ROUTES.dashboard) : undefined;

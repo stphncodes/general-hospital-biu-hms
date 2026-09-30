@@ -5,7 +5,8 @@ trust, not like a template or a generated landing page. The reference points
 are institutional services such as the NHS and GOV.UK design systems:
 information first, plain language, solid surfaces, honest status.
 
-These rules apply to every screen: public pages, auth pages and every module
+There is no public landing page: `/` is the staff sign-in. These rules apply
+to every screen: sign-in pages, the admin console and every module
 inside the application. The colour tokens live in
 [`src/app/globals.css`](../../src/app/globals.css); the component and motion
 conventions are in [`docs/architecture/README.md`](../architecture/README.md#design-system).
@@ -44,7 +45,9 @@ conventions are in [`docs/architecture/README.md`](../architecture/README.md#des
 
 - Palette tokens only (never raw hex or Tailwind palette colours such as
   `bg-blue-500` or `shadow-black`).
-- Blue is for interactive elements and emphasis. Status colours (success,
+- Green (`--hms-primary`, #15803D) is the brand colour, used for interactive
+  elements and emphasis. The success status colour is also green, so success
+  messages must always carry an icon and text, never colour alone. Status colours (success,
   warning, info, destructive) carry meaning only.
 - No gradients, including gradient text.
 
@@ -53,7 +56,7 @@ conventions are in [`docs/architecture/README.md`](../architecture/README.md#des
 - Geist, weights 400, 600 and 700 only.
 - Headings: `font-bold tracking-tight`. No tighter letter-spacing than
   `tracking-tight`, no `leading` below `leading-tight`.
-- Size caps: page `h1` up to `text-5xl` (`3.5rem` on the landing hero);
+- Size caps: page `h1` up to `text-5xl`;
   section `h2` up to `text-4xl`. Giant display type is a template tell.
 - Sentence case everywhere. Uppercase only for tiny status tags
   (`Development`, `Sample data`).

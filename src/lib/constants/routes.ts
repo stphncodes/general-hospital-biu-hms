@@ -4,7 +4,8 @@
  */
 export const ROUTES = {
   home: "/",
-  signIn: "/sign-in",
+  /** Staff sign-in is the site's front page. /sign-in redirects here. */
+  signIn: "/",
   /** Explains how staff obtain an account (accounts are admin-provisioned). */
   register: "/register",
   forgotPassword: "/forgot-password",

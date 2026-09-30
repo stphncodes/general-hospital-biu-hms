@@ -157,8 +157,8 @@ technical implementation.
 - shadcn/ui (Radix primitives, "Nova" preset) with Lucide icons.
 - All colour comes from CSS variables in `src/app/globals.css`, in two layers:
   - **HMS brand palette** (`--hms-primary`, `--hms-navy`, `--hms-primary-soft`,
-    …): the only place raw colour values exist. Identity is blue + white +
-    dark navy + soft blue.
+    …): the only place raw colour values exist. Identity is clinical green
+    (#15803D) + white + dark navy + soft green.
   - **Semantic tokens** (`--primary`, `--primary-hover`, `--primary-soft`,
     `--heading`, `--muted-foreground`, `--border`, …) that reference the
     palette and switch between light and dark themes.
@@ -168,8 +168,7 @@ technical implementation.
 - Brand components live in `src/components/brand` (`HMSLogo`, `HMSMark`,
   `HealthcareIllustration`).
 - Motion uses the `motion` library through `src/components/motion`
-  (`Reveal`, `RevealGroup`/`RevealItem`, `WordReveal`, `Float`, `Grow`,
-  `SpotlightCard`, `PageTransition`)
+  (`Reveal`, `RevealGroup`/`RevealItem`, `Float`, `PageTransition`)
   with timing from `motion/tokens.ts`. Rules: calm ease-out entrances, short
   distances, no bounce; animate one or two key elements per view; loops only
   for decorative artwork; `MotionProvider` honours `prefers-reduced-motion`.
@@ -179,8 +178,7 @@ technical implementation.
 - Light is the default theme. Every surface follows the active theme: never
   force a section into dark mode with a scoped `dark` class. Differentiate
   sections with `bg-background` / `bg-card` / `bg-primary-soft` instead.
-- Never show invented figures in the authenticated app. Sample data is
-  allowed only in the clearly labelled marketing preview.
+- Never show invented figures in the authenticated app.
 - Light, dark and system themes via `next-themes` (class strategy).
 - Modest radius and tabular numerals for dense, data-heavy screens.
 - Status colours (`success`, `warning`, `info`, `destructive`) carry meaning

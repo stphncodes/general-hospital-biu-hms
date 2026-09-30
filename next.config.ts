@@ -30,6 +30,11 @@ const nextConfig: NextConfig = {
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];
   },
+  async redirects() {
+    // Staff sign-in moved to "/"; keep old links and bookmarks working.
+    // Query strings (e.g. ?next=, ?error=) are carried over automatically.
+    return [{ source: "/sign-in", destination: "/", permanent: false }];
+  },
 };
 
 export default nextConfig;

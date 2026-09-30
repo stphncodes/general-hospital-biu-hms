@@ -13,7 +13,10 @@ Guidance for AI coding assistants working in this repository.
 
 ## Design rules (summary)
 
-The full rules are in [docs/design/README.md](docs/design/README.md). The UI
+The full rules are in [docs/design/README.md](docs/design/README.md). The brand
+colour is clinical green (`--hms-primary`, #15803D). `/` is the staff sign-in
+(no landing page); the admin console is at `/admin` (sign-in `/admin/login`,
+not linked from staff pages). The UI
 must not look AI-generated. It should read like an institutional public health
 service (NHS / GOV.UK style).
 
